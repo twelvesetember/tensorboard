@@ -1,0 +1,76 @@
+<!--
+@license
+Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<ng-template #contextMenuTemplate>
+  <tb-data-table-context-menu
+    [contextMenuHeader]="contextMenuHeader"
+    [selectableColumns]="selectableColumns"
+    [sortingInfo]="sortingInfo"
+    (removeColumn)="onRemoveColumn($event)"
+    (sortByHeader)="sortByHeader($event)"
+    (openFilterMenu)="openFilterMenu($event)"
+    (openColumnSelector)="openColumnSelector($event)"
+  ></tb-data-table-context-menu>
+</ng-template>
+
+<ng-template #columnSelectorModalTemplate>
+  <tb-data-table-column-selector-component
+    [selectableColumns]="selectableColumns"
+    [numColumnsLoaded]="numColumnsLoaded"
+    [hasMoreColumnsToLoad]="hasMoreColumnsToLoad"
+    (columnSelected)="onColumnAdded($event)"
+    (loadAllColumns)="loadAllColumns.emit()"
+  ></tb-data-table-column-selector-component>
+</ng-template>
+
+<ng-template #filterModalTemplate>
+  <tb-data-table-filter
+    [filter]="getCurrentColumnFilter()"
+    (intervalFilterChanged)="intervalFilterChanged($event)"
+    (discreteFilterChanged)="discreteFilterChanged($event)"
+    (includeUndefinedToggled)="includeUndefinedToggled()"
+  ></tb-data-table-filter>
+</ng-template>
+
+<div class="data-table-wrapper" [class.should-add-borders]="shouldAddBorders">
+  <div class="left-section">
+    <div class="data-table">
+      <div class="header">
+        <ng-content select="[header]"></ng-content>
+      </div>
+      <ng-content select="[content]"></ng-content>
+    </div>
+  </div>
+  <div
+    class="right-section"
+    *ngIf="selectableColumns && selectableColumns.length"
+  >
+    <div
+      class="add-button-column"
+      [class.small-add-button]="addColumnSize === AddColumnSize.SMALL"
+    >
+      <button
+        mat-icon-button
+        class="add-button"
+        (click)="openColumnSelector({event: $event})"
+        title="Add Column"
+      >
+        <mat-icon svgIcon="add_24px"></mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading" class="loading">
+  <mat-spinner mode="indeterminate" diameter="28"></mat-spinner>
+</div>

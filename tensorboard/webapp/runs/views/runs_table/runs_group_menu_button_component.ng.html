@@ -1,0 +1,83 @@
+<!--
+@license
+Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<button
+  mat-icon-button
+  title="Color runs by..."
+  [matMenuTriggerFor]="groupByMenu"
+>
+  <mat-icon svgIcon="palette_24px"></mat-icon>
+</button>
+<mat-menu #groupByMenu="matMenu" class="run-table-color-group-by">
+  <div class="label">Color runs by</div>
+  <button
+    *ngIf="showExperimentsGroupBy"
+    mat-menu-item
+    role="menuitemradio"
+    data-value="experiment"
+    [attr.aria-checked]="selectedGroupBy.key === GroupByKey.EXPERIMENT"
+    (click)="onGroupByChange.emit({key: GroupByKey.EXPERIMENT})"
+  >
+    <mat-icon
+      *ngIf="selectedGroupBy.key === GroupByKey.EXPERIMENT"
+      svgIcon="done_24px"
+    ></mat-icon>
+    <span>Experiment</span>
+  </button>
+  <button
+    mat-menu-item
+    role="menuitemradio"
+    data-value="run"
+    [attr.aria-checked]="selectedGroupBy.key === GroupByKey.RUN"
+    (click)="onGroupByChange.emit({key: GroupByKey.RUN})"
+  >
+    <mat-icon
+      *ngIf="selectedGroupBy.key === GroupByKey.RUN"
+      svgIcon="done_24px"
+    ></mat-icon>
+    <span>Run</span>
+  </button>
+  <button
+    mat-menu-item
+    role="menuitemradio"
+    data-value="regex"
+    [attr.aria-checked]="selectedGroupBy.key === GroupByKey.REGEX || selectedGroupBy.key === GroupByKey.REGEX_BY_EXP"
+    (click)="onGroupByRegexClick()"
+  >
+    <mat-icon
+      *ngIf="selectedGroupBy.key === GroupByKey.REGEX || selectedGroupBy.key === GroupByKey.REGEX_BY_EXP"
+      svgIcon="done_24px"
+    ></mat-icon>
+    <span>Regex</span>
+    <span *ngIf="selectedGroupBy.key === GroupByKey.REGEX"
+      ><strong> By Run Name</strong></span
+    >
+    <span *ngIf="selectedGroupBy.key === GroupByKey.REGEX_BY_EXP"
+      ><strong> By Experiment Name</strong></span
+    >
+  </button>
+  <button
+    mat-menu-item
+    role="menuitem"
+    data-value="regex-edit"
+    (click)="onRegexStringEdit()"
+    class="display-regex-string"
+  >
+    <mat-icon svgIcon="edit_24px"></mat-icon>
+    <span *ngIf="regexString">{{regexString}}</span>
+    <span *ngIf="!regexString" class="none-set-string">(none set)</span>
+  </button>
+</mat-menu>
